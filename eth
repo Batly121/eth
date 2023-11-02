@@ -1,0 +1,36 @@
+const Web3 = require('web3');
+
+// 连接到以太坊节点
+const web3 = new Web3('https://mainnet.infura.io/v3/your-infura-project-id');
+
+// 合约地址和 ABI
+const contractAddress = '0xYourContractAddress';
+const contractAbi = [
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "owner",
+                "type": "address"
+            }
+        ],
+        "name": "ContractOpened",
+        "type": "event"
+    }
+];
+
+// 创建合约实例
+const contract = new web3.eth.Contract(contractAbi, contractAddress);
+
+// 监听合约事件
+const event = contract.events.ContractOpened();
+
+event.on('data', (eventData) => {
+    console.log('合约已开启！');
+    console.log('合约拥有者地址: ' + eventData.returnValues.owner);
+});
+
+event.on('error', (error) => {
+    console.error('发生错误:', error);
+});
